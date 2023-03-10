@@ -1,44 +1,13 @@
 [
     {
         "kind": "calendar#event",
-        "etag": "\"3356186251246000\"",
-        "id": "764as79tf8o2jno7l77ougvj37",
+        "etag": "\"3356874064464000\"",
+        "id": "42guf5f2c4dtn5s1816ik1kqab",
         "status": "confirmed",
-        "htmlLink": "https://www.google.com/calendar/event?eid=NzY0YXM3OXRmOG8yam5vN2w3N291Z3ZqMzcgZWxpc2VlOG1hdGhldGFAbQ",
-        "created": "2023-03-06T08:58:45.000Z",
-        "updated": "2023-03-06T08:58:45.623Z",
-        "summary": "event1",
-        "creator": {
-            "email": "elisee8matheta@gmail.com",
-            "self": true
-        },
-        "organizer": {
-            "email": "elisee8matheta@gmail.com",
-            "self": true
-        },
-        "start": {
-            "date": "2023-03-13"
-        },
-        "end": {
-            "date": "2023-03-14"
-        },
-        "transparency": "transparent",
-        "iCalUID": "764as79tf8o2jno7l77ougvj37@google.com",
-        "sequence": 0,
-        "reminders": {
-            "useDefault": false
-        },
-        "eventType": "default"
-    },
-    {
-        "kind": "calendar#event",
-        "etag": "\"3356186303138000\"",
-        "id": "05o5bu7qt38b3smf59g6i9mrk0",
-        "status": "confirmed",
-        "htmlLink": "https://www.google.com/calendar/event?eid=MDVvNWJ1N3F0MzhiM3NtZjU5ZzZpOW1yazAgZWxpc2VlOG1hdGhldGFAbQ",
-        "created": "2023-03-06T08:59:11.000Z",
-        "updated": "2023-03-06T08:59:11.569Z",
-        "summary": "event2",
+        "htmlLink": "https://www.google.com/calendar/event?eid=NDJndWY1ZjJjNGR0bjVzMTgxNmlrMWtxYWIgZWxpc2VlOG1hdGhldGFAbQ",
+        "created": "2023-03-10T08:30:32.000Z",
+        "updated": "2023-03-10T08:30:32.232Z",
+        "summary": "event 2",
         "creator": {
             "email": "elisee8matheta@gmail.com",
             "self": true
@@ -54,7 +23,7 @@
             "date": "2023-03-15"
         },
         "transparency": "transparent",
-        "iCalUID": "05o5bu7qt38b3smf59g6i9mrk0@google.com",
+        "iCalUID": "42guf5f2c4dtn5s1816ik1kqab@google.com",
         "sequence": 0,
         "reminders": {
             "useDefault": false
@@ -63,13 +32,13 @@
     },
     {
         "kind": "calendar#event",
-        "etag": "\"3356186274896000\"",
-        "id": "47appqchk7r8f2sbripjpbvsmq",
+        "etag": "\"3356874074092000\"",
+        "id": "36lmvthmeqp73jt0abemb10a7e",
         "status": "confirmed",
-        "htmlLink": "https://www.google.com/calendar/event?eid=NDdhcHBxY2hrN3I4ZjJzYnJpcGpwYnZzbXEgZWxpc2VlOG1hdGhldGFAbQ",
-        "created": "2023-03-06T08:58:57.000Z",
-        "updated": "2023-03-06T08:58:57.448Z",
-        "summary": "event3",
+        "htmlLink": "https://www.google.com/calendar/event?eid=MzZsbXZ0aG1lcXA3M2p0MGFiZW1iMTBhN2UgZWxpc2VlOG1hdGhldGFAbQ",
+        "created": "2023-03-10T08:30:37.000Z",
+        "updated": "2023-03-10T08:30:37.046Z",
+        "summary": "event 3",
         "creator": {
             "email": "elisee8matheta@gmail.com",
             "self": true
@@ -85,7 +54,7 @@
             "date": "2023-03-16"
         },
         "transparency": "transparent",
-        "iCalUID": "47appqchk7r8f2sbripjpbvsmq@google.com",
+        "iCalUID": "36lmvthmeqp73jt0abemb10a7e@google.com",
         "sequence": 0,
         "reminders": {
             "useDefault": false

@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 constants.py
 token.json
+events_list.json

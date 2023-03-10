@@ -65,8 +65,6 @@ def calen(message):
         print('An error occurred: %s' % error)
 
 def list_of_event(message):
-    # service = build('calendar', 'v3', credentials=creds)
-
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -100,15 +98,39 @@ def list_of_event(message):
         response += responsestring
 
     bot.send_message(message.chat.id,f"avaialble events\n{response}")
-    return eventsdict
+    return eventsdict,events
 
+def del_event(message):
+    command_list = message.text.split()
+    if command_list[0].lower() == "del_event" and command_list[1].isdigit():
+        return True
 
-@bot.message_handler(commands= ["delevent"])
+@bot.message_handler(func=del_event)
 def delete_event(message):
-    events = list_of_event(message)
-    bot.send_message(message.chat.id,"Select event number to delete")
+    events = list_of_event(message)[1]
+    num = int(message.text.split()[1])
+    event_id = events[num - 1]["id"]
+    service.events().delete(calendarId = "primary",eventId = event_id).execute()
+    bot.send_message(message.chat.id,"Event Deleted")
 
+
+def validate_make_event(message):
+    commands_list = tuple(message.text.split())
+    if len(commands_list) >= 3:
+        command,date,description = commands_list[0],commands_list[1],commands_list[2]
+        if command == "create_event" and description :
+            return True
     
+@bot.message_handler(func = validate_make_event)
+def make_event(meassage):
+    pass
+
+
+
+
+@bot.message_handler(commands = ["print"])
+def show(message):
+    print(message)
 
 
 bot.polling()
