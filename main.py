@@ -59,8 +59,8 @@ def calen(message):
     """
 
     try:
-        list_of_event(message)
-
+        events = list_of_event(message)
+        event_output(message,events)
     except HttpError as error:
         print('An error occurred: %s' % error)
 
@@ -77,28 +77,33 @@ def list_of_event(message):
         outfile.write(events_json)
     
     if not events:
-        bot.reply_to(message,'No upcoming events found.')
+        bot.send_message(message.chat.id,'No upcoming events found.')
         return
 
+    return events
 
+# separate here return events
+
+def event_output(message,events):
     eventsdict = {}
     eventnum = 1
+    if events:
+        for event in events:
+            
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            eventsdict[str(eventnum)] = [start,event['summary']]
+            eventnum += 1
 
-    for event in events:
-        
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        eventsdict[str(eventnum)] = [start,event['summary']]
-        eventnum += 1
+        response = ""
 
-    response = ""
+        for key,value in eventsdict.items():
 
-    for key,value in eventsdict.items():
+            responsestring = f"{key} {value[0]} {value[1]}\n"
+            response += responsestring
 
-        responsestring = f"{key} {value[0]} {value[1]}\n"
-        response += responsestring
-
-    bot.send_message(message.chat.id,f"avaialble events\n{response}")
-    return eventsdict,events
+        bot.send_message(message.chat.id,f"avaialble events\n{response}")
+        print(events)
+    return eventsdict
 
 def del_event(message):
     command_list = message.text.split()
@@ -107,11 +112,17 @@ def del_event(message):
 
 @bot.message_handler(func=del_event)
 def delete_event(message):
-    events = list_of_event(message)[1]
+    events = list_of_event(message)
+    print(events)
     num = int(message.text.split()[1])
-    event_id = events[num - 1]["id"]
-    service.events().delete(calendarId = "primary",eventId = event_id).execute()
-    bot.send_message(message.chat.id,"Event Deleted")
+    if events:
+        event_id = events[num - 1]["id"]
+        service.events().delete(calendarId = "primary",eventId = event_id).execute()
+        bot.send_message(message.chat.id,"Event Deleted")
+        events = list_of_event(message)
+        event_output(message,events)
+    else:
+        bot.send_message(message.chat.id,"No events left")
 
 
 def validate_make_event(message):
@@ -122,15 +133,23 @@ def validate_make_event(message):
             return True
     
 @bot.message_handler(func = validate_make_event)
-def make_event(meassage):
-    pass
-
-
+def make_event(message):
+    command = message.text.split()
+    print(command)
+    summary = command[1]
+    startdate = command[2]
+    enddate = command[3]
+    event = {
+        "summary": summary,
+        "start" : {"date" : startdate},
+        "end" : {"date" : enddate}
+    }
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    bot.reply_to(message,"sup")
 
 
 @bot.message_handler(commands = ["print"])
 def show(message):
     print(message)
-
 
 bot.polling()
