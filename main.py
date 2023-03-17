@@ -10,6 +10,7 @@ import telebot
 import json
 from constants import BOT_API_KEY
 
+
 def get_creds():
     """Creates and stores the login credentials"""
 
@@ -66,7 +67,6 @@ def calen(message):
 
 def list_of_event(message):
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                             maxResults=10, singleEvents=True,
                                             orderBy='startTime').execute()
@@ -145,7 +145,7 @@ def make_event(message):
         "end" : {"date" : enddate}
     }
     event = service.events().insert(calendarId='primary', body=event).execute()
-    bot.reply_to(message,"sup")
+    bot.send_message(message.chat.id,f"event: '{summary}' created.")
 
 
 @bot.message_handler(commands = ["print"])
