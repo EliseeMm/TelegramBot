@@ -1,11 +1,10 @@
 import requests
 import http.client
-from pprint import pprint
 
 conn = http.client.HTTPSConnection("developer.sepush.co.za")
-payload = 'eThekwini'
+payload = ''
 headers = {"token" : "55015410-617D4AFD-8FFBA538-428E48F9"}
-conn.request("GET", "/business/2.0/areas_search?text=glenwood", payload, headers) # search by text
+conn.request("GET", "/business/2.0/area?id=eskde-10-fourwaysext10cityofjohannesburggauteng&test=current", payload, headers)
 res = conn.getresponse()
 data = res.read()
-pprint(data.decode("utf-8"))
+print(data.decode("utf-8"))

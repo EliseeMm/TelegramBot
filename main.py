@@ -8,7 +8,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import telebot
 import json
-from constants import BOT_API_KEY
+from constants import BOT_API_KEY,SCOPE
+
 
 
 def get_creds():
@@ -39,12 +40,27 @@ def service_builder():
 
 
 bot = telebot.TeleBot(BOT_API_KEY,parse_mode = None)
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = SCOPE
 service = service_builder()
 
-@bot.message_handler(commands = ["hello"])
+@bot.message_handler(commands = ["help"])
+def helplist(message):
+    bot.send_message(message.chat.id,
+    "/cal: view events appearing on users calendar.\n\n"
+    "make an all day event:\nall_day <summary> <start date> <end date>\n\n"
+    "make a timed event:\ntimed <summary> <startdate> <start time> <end date> <end time>\n\n"
+    "delete calendar event:\ndel_event <event number>\n\n"
+    "Formats:\n"
+    "Dates : yyyy-mm-dd\n"
+    "Time : hh:mm\n")
+
+def help_needed(message):
+    help = ["hello","hi","sup"]
+    return message.text in help
+
+@bot.message_handler(func = help_needed)
 def greet(message):
-    bot.reply_to(message, "Hey there,My Name is Aux, How can i help you ?")
+    bot.reply_to(message, "Hey there,My Name is Aux, How can i /help you ?")
 
 
 @bot.message_handler(commands = ["cal"])
@@ -63,7 +79,7 @@ def calen(message):
         events = list_of_event(message)
         event_output(message,events)
     except HttpError as error:
-        print('An error occurred: %s' % error)
+        bot.reply_to('An error occurred: %s' % error)
 
 def list_of_event(message):
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
@@ -82,8 +98,6 @@ def list_of_event(message):
 
     return events
 
-# separate here return events
-
 def event_output(message,events):
     eventsdict = {}
     eventnum = 1
@@ -91,18 +105,26 @@ def event_output(message,events):
         for event in events:
             
             start = event['start'].get('dateTime', event['start'].get('date'))
-            eventsdict[str(eventnum)] = [start,event['summary']]
+            end = event['end'].get('dateTime', event['end'].get('date'))
+            eventsdict[str(eventnum)] = [start,end,event['summary']]
             eventnum += 1
 
         response = ""
 
         for key,value in eventsdict.items():
+            if len(value[0]) > 10:
+                date = value[0][:10]
+                time = f'{value[0][11:16]}-{value[1][11:16]}'
+                responsestring = f"{key})    {date}  {time.rjust(15,' ')}  {value[2].rjust(10,' ')}\n"
 
-            responsestring = f"{key} {value[0]} {value[1]}\n"
+            else:
+                date = value[0]
+                time = value[1]
+                responsestring = f"{key})    {date}  {time.rjust(15,' ')}  {value[2].rjust(10,' ')}\n"
             response += responsestring
 
         bot.send_message(message.chat.id,f"avaialble events\n{response}")
-        print(events)
+ 
     return eventsdict
 
 def del_event(message):
@@ -113,39 +135,81 @@ def del_event(message):
 @bot.message_handler(func=del_event)
 def delete_event(message):
     events = list_of_event(message)
-    print(events)
     num = int(message.text.split()[1])
-    if events:
+    if events and num <= len(events):
         event_id = events[num - 1]["id"]
         service.events().delete(calendarId = "primary",eventId = event_id).execute()
-        bot.send_message(message.chat.id,"Event Deleted")
+        bot.send_message(message.chat.id,f"Event \"{events[num-1]['summary']}\" Deleted")
         events = list_of_event(message)
         event_output(message,events)
+    elif num > len(events):
+        bot.send_message(message.chat.id,"Invalid event selection")
     else:
         bot.send_message(message.chat.id,"No events left")
 
 
-def validate_make_event(message):
+def validate_make_allday_event(message):
     commands_list = tuple(message.text.split())
-    if len(commands_list) >= 3:
-        command,date,description = commands_list[0],commands_list[1],commands_list[2]
-        if command == "create_event" and description :
+    if len(commands_list) == 4:
+        command = commands_list[0]
+        if command == "all_day":
             return True
+
     
-@bot.message_handler(func = validate_make_event)
-def make_event(message):
+@bot.message_handler(func = validate_make_allday_event)
+def make_allday_event(message):
     command = message.text.split()
-    print(command)
     summary = command[1]
     startdate = command[2]
     enddate = command[3]
-    event = {
-        "summary": summary,
-        "start" : {"date" : startdate},
-        "end" : {"date" : enddate}
-    }
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    bot.send_message(message.chat.id,f"event: '{summary}' created.")
+    try:
+        datetime.date(year = int(startdate[:3]),month = int(startdate[5:7]),day = int(startdate[8:10]))
+        datetime.date(year = int(enddate[:3]),month = int(enddate[5:7]),day = int(enddate[8:10]))
+        event = {
+            "summary": summary,
+            "start" : {"date" : startdate},
+            "end" : {"date" : enddate}
+        }
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        bot.send_message(message.chat.id,f"event: '{summary}' created.")
+    except:
+        bot.reply_to(message,"Invalid date/time entered")
+
+
+def validate_make_timed_event(message):
+    commands_list = tuple(message.text.split())
+    
+    if len(commands_list) == 5:
+        command= commands_list[0]
+        if command == "timed":
+            return True
+    
+
+@bot.message_handler(func = validate_make_timed_event)
+def make_timed_event(message):
+    commands_list = message.text.split()
+    command,summary,startdate,starttime,endtime = commands_list[0],commands_list[1],commands_list[2],commands_list[3],commands_list[4]  
+    try:
+        datetime.date(year = int(startdate[:3]),month = int(startdate[5:7]),day = int(startdate[8:10]))
+        datetime.time(hour=int(starttime[0:2]),minute=int(starttime[3:5]))
+        datetime.time(hour=int(endtime[0:2]),minute=int(endtime[3:5]))
+        event = {
+            "summary": summary,
+            "start" : {
+                "dateTime" : f"{startdate}T{starttime}:00+02:00",
+                "timeZone": "Africa/Johannesburg"
+                }, 
+            "end" : {
+                "dateTime" : f"{startdate}T{endtime}:00+02:00",
+                "timeZone": "Africa/Johannesburg"
+                }
+        }
+        event = service.events().insert(calendarId='primary', body=event).execute()
+
+        bot.send_message(message.chat.id,f"event: '{summary}' created.")
+
+    except ValueError as e:
+        bot.reply_to(message,"Invalid date/time entered")
 
 
 @bot.message_handler(commands = ["print"])
