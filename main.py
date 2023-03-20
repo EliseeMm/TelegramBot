@@ -9,7 +9,7 @@ from googleapiclient.errors import HttpError
 import telebot
 import json
 from constants import BOT_API_KEY,SCOPE
-
+from weather import weather
 
 
 def get_creds():
@@ -68,7 +68,6 @@ def calendar(message):
     bot.send_message(message.chat.id,"Finding events")
     calen(message)
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 def calen(message):
     """Shows basic usage of the Google Calendar API.
@@ -215,5 +214,9 @@ def make_timed_event(message):
 @bot.message_handler(commands = ["print"])
 def show(message):
     print(message)
+
+@bot.message_handler(commands = ["weather"])
+def botweather(message):
+    weather(message,bot)
 
 bot.polling()
