@@ -15,7 +15,7 @@ def weather(message,bot):
     max_temp = data['daily']['temperature_2m_max']
     min_temp = data['daily']['temperature_2m_min']
     rain = data['daily']['rain_sum']
-    bot.reply_to(message,"Getting the next 7 days weather")
+    bot.reply_to(message,"Getting the next 7 days weather for Durban")
     response = f'{"Date".center(30)} {"Min.T".center(15)} {"Max.T".center(10)} {"Rain".center(10)}\n'
     for i in range(len(days)):
         response+=f"{str(days[i]).rjust(10,' ')}{str(min_temp[i]).rjust(12,' ')}{str(max_temp[i]).rjust(15,' ')}{str(rain[i]).rjust(15,' ')}\n"
@@ -33,7 +33,24 @@ def latitude_and_long(city):
         if i['city'].lower() == city.lower():
             print("here")
             return i["lat"], i["lng"]
-    # print(data)
+    
+def selectedweather(message,bot,city):
+    latitude,longitude = latitude_and_long(city)
+    client = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto")
+    data = client.json()
+    days= data['daily']['time']
+    max_temp = data['daily']['temperature_2m_max']
+    min_temp = data['daily']['temperature_2m_min']
+    rain = data['daily']['rain_sum']
+    bot.reply_to(message,f"Getting the next 7 days weather for {city}")
+    response = f'{"Date".center(30)} {"Min.T".center(15)} {"Max.T".center(10)} {"Rain".center(10)}\n'
+    for i in range(len(days)):
+        response+=f"{str(days[i]).rjust(10,' ')}{str(min_temp[i]).rjust(12,' ')}{str(max_temp[i]).rjust(15,' ')}{str(rain[i]).rjust(15,' ')}\n"
+    print("date".center(20))
+    bot.send_message(message.chat.id,response)
+
+    return data
 
 
-print(latitude_and_long('durban'))
+
+# print(selectedweather('johannesburg'))

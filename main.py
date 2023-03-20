@@ -9,7 +9,7 @@ from googleapiclient.errors import HttpError
 import telebot
 import json
 from constants import BOT_API_KEY,SCOPE
-from weather import weather
+from weather import weather,selectedweather
 
 
 def get_creds():
@@ -46,7 +46,9 @@ service = service_builder()
 @bot.message_handler(commands = ["help"])
 def helplist(message):
     bot.send_message(message.chat.id,
-    "/cal: view events appearing on users calendar.\n\n"
+    "/cal : view events appearing on users calendar.\n\n"
+    "/weather : get the next 7 days weather for Durban\n"
+    "or specify which city : weather <cityname>\n\n"
     "make an all day event:\nall_day <summary> <start date> <end date>\n\n"
     "make a timed event:\ntimed <summary> <startdate> <start time> <end date> <end time>\n\n"
     "delete calendar event:\ndel_event <event number>\n\n"
@@ -218,5 +220,17 @@ def show(message):
 @bot.message_handler(commands = ["weather"])
 def botweather(message):
     weather(message,bot)
+
+def city_weather(message):
+    commands = tuple(message.text.split())
+    if len(commands) > 1:
+        command,city = commands
+        if command.lower() == "weather":
+            return commands
+
+@bot.message_handler(func = city_weather)
+def show_weather(message):
+    city = city_weather(message)[1]
+    selectedweather(message,bot,city)
 
 bot.polling()
