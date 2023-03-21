@@ -10,6 +10,7 @@ import telebot
 import json
 from constants import BOT_API_KEY,SCOPE
 from weather import weather,selectedweather
+from emailsec import gmail_send_message
 
 
 def get_creds():
@@ -49,6 +50,7 @@ def helplist(message):
     "/cal : view events appearing on users calendar.\n\n"
     "/weather : get the next 7 days weather for Durban\n"
     "or specify which city : weather <cityname>\n\n"
+    "send email: email,subject, address, mail content\n\n"
     "make an all day event:\nall_day <summary> <start date> <end date>\n\n"
     "make a timed event:\ntimed <summary> <startdate> <start time> <end date> <end time>\n\n"
     "delete calendar event:\ndel_event <event number>\n\n"
@@ -234,6 +236,20 @@ def show_weather(message):
     city = city_weather(message)[1]
     selectedweather(message,bot,city)
     
-    
-    
+def validate_email(message):
+    commands = tuple(message.text.split(","))
+    command,to,subject,mail, = commands
+    if command.lower() == "email":
+        return True
+
+@bot.message_handler(func = validate_email)
+def send_email(message):
+    commands = tuple(message.text.split(","))
+    print(commands)
+    command,to,subject,mail, = commands
+    gmail_send_message(to,subject,mail)
+    bot.send_message(message.chat.id,f"Email '{subject}' sent to {to}.")
+
+
+
 bot.polling()

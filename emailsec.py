@@ -17,7 +17,7 @@ from constants import EMAILSCOPE
 SCOPES = EMAILSCOPE
 
 
-def main():
+def get_creds():
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
     """
@@ -38,7 +38,7 @@ def main():
         # Save the credentials for the next run
         with open('tokene.json', 'w') as token:
             token.write(creds.to_json())
-
+    return creds
     try:
         # Call the Gmail API
         service = build('gmail', 'v1', credentials=creds)
@@ -101,7 +101,7 @@ def gmail_create_draft():
     return draft
 
 
-def gmail_send_message():
+def gmail_send_message(to,subject,mail):
     """Create and send an email message
     Print the returned  message id
     Returns: Message object, including message id
@@ -110,17 +110,17 @@ def gmail_send_message():
     TODO(developer) - See https://developers.google.com/identity
     for guides on implementing OAuth2 for the application.
     """
-    creds = Credentials.from_authorized_user_file('tokene.json', SCOPES)
+    creds = get_creds()
 
     try:
         service = build('gmail', 'v1', credentials=creds)
         message = EmailMessage()
 
-        message.set_content('hey there buttercup,this is an email i am writing through code ,i havent connected it to telegram yet but it works so far')
+        message.set_content(mail)
 
-        message['To'] = 'angelique.daguiar@gmail.com'
+        message['To'] = to
         message['From'] = 'elisee8matheta@gmail.com'
-        message['Subject'] = 'Automated draft'
+        message['Subject'] = subject
 
         # encoded message
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
@@ -132,14 +132,9 @@ def gmail_send_message():
         # pylint: disable=E1101
         send_message = (service.users().messages().send
                         (userId="me", body=create_message).execute())
+        print(send_message)
         print(F'Message Id: {send_message["id"]}')
     except HttpError as error:
         print(F'An error occurred: {error}')
         send_message = None
     return send_message
-
-
-if __name__ == '__main__':
-    main()
-    # gmail_create_draft()
-    gmail_send_message()
