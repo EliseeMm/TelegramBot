@@ -3,7 +3,7 @@ import requests
 from pprint import pprint
 import json
 
-client = requests.get("https://api.open-meteo.com/v1/forecast?latitude=-29.86&longitude=31.03&daily=temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto")
+client = requests.get("https://api.open-meteo.com/v1/forecast?latitude=-29.86&longitude=31.03&daily=temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,precipitation_sum&timezone=auto")
 data = client.json()
 
 
@@ -36,7 +36,7 @@ def latitude_and_long(city):
     
 def selectedweather(message,bot,city):
     latitude,longitude = latitude_and_long(city)
-    client = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto")
+    client = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min,rain_sum,showers_sum&timezone=auto")
     data = client.json()
     days= data['daily']['time']
     max_temp = data['daily']['temperature_2m_max']
@@ -54,3 +54,4 @@ def selectedweather(message,bot,city):
 
 
 # print(selectedweather('johannesburg'))
+# ^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$

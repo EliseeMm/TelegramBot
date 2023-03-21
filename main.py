@@ -222,7 +222,8 @@ def botweather(message):
     weather(message,bot)
 
 def city_weather(message):
-    commands = tuple(message.text.split())
+    commands = tuple(message.text.split(" ",1))
+    print(commands)
     if len(commands) > 1:
         command,city = commands
         if command.lower() == "weather":
@@ -232,5 +233,7 @@ def city_weather(message):
 def show_weather(message):
     city = city_weather(message)[1]
     selectedweather(message,bot,city)
-
+    
+    
+    
 bot.polling()
