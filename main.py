@@ -11,7 +11,7 @@ import json
 from constants import BOT_API_KEY,SCOPE
 from weather import weather,selectedweather
 from emailsec import gmail_send_message
-
+from ls import response_loadshedding
 
 def get_creds():
     """Creates and stores the login credentials"""
@@ -238,7 +238,7 @@ def show_weather(message):
     
 def validate_email(message):
     commands = tuple(message.text.split(","))
-    command,to,subject,mail, = commands
+    command= commands[0]
     if command.lower() == "email":
         return True
 
@@ -250,6 +250,8 @@ def send_email(message):
     gmail_send_message(to,subject,mail)
     bot.send_message(message.chat.id,f"Email '{subject}' sent to {to}.")
 
-
+@bot.message_handler(commands = ["loadshedding"])
+def loadshedding(message):
+    response_loadshedding(message,bot)
 
 bot.polling()

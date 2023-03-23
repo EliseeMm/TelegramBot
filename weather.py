@@ -14,7 +14,7 @@ def weather(message,bot):
     days= data['daily']['time']
     max_temp = data['daily']['temperature_2m_max']
     min_temp = data['daily']['temperature_2m_min']
-    rain = data['daily']['rain_sum']
+    rain = data['daily']['precipitation_sum']
     bot.reply_to(message,"Getting the next 7 days weather for Durban")
     response = f'{"Date".center(30)} {"Min.T".center(15)} {"Max.T".center(10)} {"Rain".center(10)}\n'
     for i in range(len(days)):

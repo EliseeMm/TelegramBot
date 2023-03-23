@@ -2,42 +2,74 @@ import requests
 import http.client
 import json
 conn = http.client.HTTPSConnection("developer.sepush.co.za")
-
+import datetime
+import time
 payload = ''
 headers = {"token" : "55015410-617D4AFD-8FFBA538-428E48F9"}
-id = "ethekwini2-14-glenwood"
-conn.request("GET", f"/business/2.0/area?id={id}", payload, headers)
-res = conn.getresponse()
-data = res.read()
 
-lis = data.decode("utf-8")
-datas = json.loads(lis)
+def response_loadshedding(message,bot):
 
-with open("load.json","w") as file:
-    json.dump(datas,file,indent=4)
+    area_ids = {
+        "Home": "ethekwini2-14-glenwood",
+        "Work" : "ethekwini2-23-umbilo",
+        "Lique" : "ethekwini2-13-umbiloeast",
+    }
+    bot.send_message(message.chat.id,"* indicates current loadshedding times")
+    current_stage = get_stage()
+    for key,value in area_ids.items():
 
-print(type(datas))
-stage = 0 
-for date_ in datas["schedule"]["days"][0]["stages"]:
-    stage += 1
-    times = ""
-    if len(date_) == 0:
-        times = "No affected"
-    elif len(date_) == 1:
-        times += date_[0]
-    else:
-        for i in date_:
-            times += f"{i} "
-    print(f"stage: {stage} ,times: {times}")
+        conn.request("GET", f"/business/2.0/area?id={value}&test=current", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+
+        lis = data.decode("utf-8")
+        datas = json.loads(lis)
+        print(key)
+        with open("load.json","w") as file:
+            json.dump(datas,file,indent=4)      
+
+        stage = 0 
+        response = f"Location: {key}\nCurrent stage:{current_stage}\n"
+        for date_ in datas["schedule"]["days"][0]["stages"]:
+            currently = ""
+            stage += 1
+            times = ""
+            if stage == current_stage:
+                currently += "*"
+
+            if len(date_) == 0:
+                times = "Not affected"
+            elif len(date_) == 1:
+                times += date_[0]
+            else:
+                for i in date_:
+                    times += f"{i} "
+            response += f"{currently}Stage: {stage} ,Times: {times}\n\n"
+        bot.send_message(message.chat.id,response)
 
 
-area_ids = {
-    "glenwood 14": "ethekwini2-14-glenwood",
-    "umbilo" : "ethekwini2-23-umbilo",
-    "umbilo east 13" : "ethekwini2-13-umbiloeast",
-}
+def get_stage():
+    print("Getting Current Load Shedding Stage")
+    URL = "http://loadshedding.eskom.co.za/LoadShedding/GetStatus"
+    r = requests.get(URL)
+    data = r.json()
+    stage = data -1
+    return stage
 
+def timeuntil():
+    # import time
+
+    
+    t = time.localtime()
+    # current_time = time.strptime("%H:%M:%S", t)
+    time1 = time.
+    print(type(time1))
+    # print(type(current_time))
+    print(time1-t) 
+
+timeuntil()
 # for key,value in area_ids.items():
+
 #     print(key,value)
 #     conn.request("GET", f"/business/2.0/area?id={value}&test=current", payload, headers)
 #     res = conn.getresponse()
