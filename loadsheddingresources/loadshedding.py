@@ -2,8 +2,6 @@ import requests
 import http.client
 import json
 conn = http.client.HTTPSConnection("developer.sepush.co.za")
-import datetime
-import time
 payload = ''
 headers = {"token" : "55015410-617D4AFD-8FFBA538-428E48F9"}
 
@@ -56,18 +54,7 @@ def get_stage():
     stage = data -1
     return stage
 
-def timeuntil():
-    # import time
 
-    
-    t = time.localtime()
-    # current_time = time.strptime("%H:%M:%S", t)
-    time1 = time.
-    print(type(time1))
-    # print(type(current_time))
-    print(time1-t) 
-
-timeuntil()
 # for key,value in area_ids.items():
 
 #     print(key,value)

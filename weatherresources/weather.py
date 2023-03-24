@@ -1,6 +1,4 @@
-import http
 import requests
-from pprint import pprint
 import json
 
 client = requests.get("https://api.open-meteo.com/v1/forecast?latitude=-29.86&longitude=31.03&daily=temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,precipitation_sum&timezone=auto")
@@ -50,8 +48,3 @@ def selectedweather(message,bot,city):
     bot.send_message(message.chat.id,response)
 
     return data
-
-
-
-# print(selectedweather('johannesburg'))
-# ^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$
