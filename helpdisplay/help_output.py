@@ -1,5 +1,6 @@
 def output_help():
-    return ("/calendar : view current and future events appearing on users calendar.\n\n"
+    return ("/help : displays how to use accepted commands\n\n"
+    "/calendar : view current and future events appearing on users calendar.\n\n"
     "/weather : get the next 7 days weather for Durban\n"
     "or specify which city : weather <cityname>\n\n"
     "/loadshedding : return loadshedding times for\n"

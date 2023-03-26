@@ -22,11 +22,11 @@ def help_needed(message):
 def greet(message):
     bot.reply_to(message, "Hey there,My Name is Aux, How can i /help you ?")
 
-
 @bot.message_handler(commands = ["calendar"])
 def calendar(message):
     bot.send_message(message.chat.id,"Finding events")
-    calen(message,bot)
+    response = calen(message,bot)
+    bot.send_message(message.chat.id,response)
 
 
 def del_event(message):
@@ -36,8 +36,9 @@ def del_event(message):
 
 @bot.message_handler(func=del_event)
 def deleteevent(message):
-    delete_events(message,bot)
-    
+    response = delete_events(message,bot)
+    bot.send_message(message.chat.id, response)
+
 
 def validate_make_allday_event(message):
     commands_list = tuple(message.text.split())
@@ -45,12 +46,13 @@ def validate_make_allday_event(message):
         command = commands_list[0]
         if command == "all_day":
             return True
-
-    
+  
 @bot.message_handler(func = validate_make_allday_event)
 def make_allday_event(message):
-    insert_allday_event(message,bot)
-   
+    response = insert_allday_event(message)
+    bot.send_message(message.chat.id,response)
+
+
 def validate_make_timed_event(message):
     commands_list = tuple(message.text.split())
     
@@ -59,23 +61,20 @@ def validate_make_timed_event(message):
         if command == "timed":
             return True
     
-
 @bot.message_handler(func = validate_make_timed_event)
 def make_timed_event(message):
-    insert_timed_event(message,bot)
-
-
-@bot.message_handler(commands = ["print"])
-def show(message):
-    print(message)
+    response = insert_timed_event(message)
+    bot.send_message(message.chat.id,response)
 
 @bot.message_handler(commands = ["weather"])
 def botweather(message):
-    weather(message,bot)
+    bot.reply_to(message,"Getting the next 7 days weather for Durban")
+    response = weather()
+    bot.send_message(message.chat.id,response)
+
 
 def city_weather(message):
     commands = tuple(message.text.split(" ",1))
-    print(commands)
     if len(commands) > 1:
         command,city = commands
         if command.lower() == "weather":
@@ -84,8 +83,11 @@ def city_weather(message):
 @bot.message_handler(func = city_weather)
 def show_weather(message):
     city = city_weather(message)[1]
-    selectedweather(message,bot,city)
-    
+    bot.reply_to(message,f"Getting the next 7 days weather for {city}")
+    response = selectedweather(message,bot,city)
+    bot.send_message(message.chat.id,response)
+
+
 def validate_email(message):
     commands = tuple(message.text.split(","))
     command= commands[0]
@@ -95,7 +97,6 @@ def validate_email(message):
 @bot.message_handler(func = validate_email)
 def send_email(message):
     commands = tuple(message.text.split(","))
-    print(commands)
     command,to,subject,mail, = commands
     gmail_send_message(to,subject,mail)
     bot.send_message(message.chat.id,f"Email '{subject}' sent to {to}.")
@@ -103,5 +104,6 @@ def send_email(message):
 @bot.message_handler(commands = ["loadshedding"])
 def loadshedding(message):
     response_loadshedding(message,bot)
+    
 
 bot.polling()

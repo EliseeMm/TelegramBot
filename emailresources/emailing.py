@@ -1,11 +1,7 @@
 from __future__ import print_function
-
 import os.path
-
 import base64
 from email.message import EmailMessage
-
-import google.auth
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -13,7 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from constants import EMAILSCOPE
 
-# If modifying these scopes, delete the file token.json.
+
 SCOPES = EMAILSCOPE
 
 
@@ -92,7 +88,7 @@ def gmail_create_draft():
         draft = service.users().drafts().create(userId="me",
                                                 body=create_message).execute()
 
-        print(F'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+        
 
     except HttpError as error:
         print(F'An error occurred: {error}')
@@ -132,9 +128,8 @@ def gmail_send_message(to,subject,mail):
         # pylint: disable=E1101
         send_message = (service.users().messages().send
                         (userId="me", body=create_message).execute())
-        print(send_message)
-        print(F'Message Id: {send_message["id"]}')
+        
     except HttpError as error:
-        print(F'An error occurred: {error}')
+    
         send_message = None
     return send_message
