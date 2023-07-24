@@ -1,0 +1,44 @@
+import requests
+import json
+
+client = requests.get("https://api.open-meteo.com/v1/forecast?latitude=-29.86""&longitude=31.03&daily=temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,precipitation_sum&timezone=auto")
+data = client.json()
+
+
+with open('weatherresults.json', 'w') as fp:
+    json.dump(data,fp, indent=4)
+
+def weather():
+    days= data['daily']['time']
+    max_temp = data['daily']['temperature_2m_max']
+    min_temp = data['daily']['temperature_2m_min']
+    rain = data['daily']['precipitation_sum']
+    response = f'{"Date".center(30)} {"Min.T".center(15)} {"Max.T".center(10)} {"Rain".center(10)}\n'
+    for i in range(len(days)):
+        response += f"{str(days[i]).rjust(10,' ')}{str(min_temp[i]).rjust(12,' ')}{str(max_temp[i]).rjust(15,' ')}{str(rain[i]).rjust(15,' ')}\n"
+    return response
+
+
+def latitude_and_long(city):
+    with open('geolocations.json') as file :
+        data = json.load(file)
+    
+    for i in data:
+        if i['city'].lower() == city.lower():
+            return i["lat"], i["lng"]
+
+
+def selectedweather(city):
+    latitude,longitude = latitude_and_long(city)
+    client = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}" 
+                            "&daily=temperature_2m_max,temperature_2m_min,rain_sum,showers_sum&timezone=auto")
+    data = client.json()
+    days= data['daily']['time']
+    max_temp = data['daily']['temperature_2m_max']
+    min_temp = data['daily']['temperature_2m_min']
+    rain = data['daily']['rain_sum']
+    response = f'{"Date".center(30)} {"Min.T".center(15)} {"Max.T".center(10)} {"Rain".center(10)}\n'
+    for i in range(len(days)):
+        response+=f"{str(days[i]).rjust(10,' ')}{str(min_temp[i]).rjust(12,' ')}{str(max_temp[i]).rjust(15,' ')}{str(rain[i]).rjust(15,' ')}\n"
+
+    return response
