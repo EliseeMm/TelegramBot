@@ -18,7 +18,7 @@ def get_creds():
     Lists the user's Gmail labels.
     """
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
+    # The file email_token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('email_token.json'):
