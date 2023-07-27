@@ -165,7 +165,7 @@ def show_weather(message):
     """
     city = city_weather(message)[1]
     bot.reply_to(message,f"Getting the next 7 days weather for {city}")
-    response = selectedweather(message,bot,city)
+    response = selectedweather(city)
     bot.send_message(message.chat.id,response)
 
 

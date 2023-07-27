@@ -18,3 +18,6 @@ In order to implement the functions above the following API's were used:
 2) Gmail API : Sending email.
 3) EskomSePush API : Retrieving loadshedding stages and schedule
 4) Open-Meteo API : Retrieving weather information
+
+## Known bugs
+Program crashes when a weather request is made for a none existent place. 
