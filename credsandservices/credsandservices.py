@@ -8,7 +8,13 @@ SCOPES = SCOPE
 
 
 def get_creds():
-    """Creates and stores the login credentials"""
+    """
+    The get_creds function creates and stores the login credentials.
+        If there is a token file, it will use that to create the credentials.
+        Otherwise, it will prompt you for your username and password.
+    
+    :return: An object of type credentials
+    """
 
     creds = None
    
@@ -28,6 +34,14 @@ def get_creds():
 
 
 def service_builder():
+    """
+    The service_builder function is used to build a service object that can be used to make requests
+    to the Google Calendar API. The function uses the get_creds() function, which returns credentials 
+    that are then passed into the build() method of googleapiclient.discovery.build(). This method returns 
+    a service object that can be used to make requests.
+    
+    :return: A service object
+    """
     creds = get_creds()
     service = build('calendar', 'v3', credentials=creds)
 

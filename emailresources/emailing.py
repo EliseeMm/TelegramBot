@@ -42,8 +42,6 @@ def gmail_send_message(to,subject,mail):
     Returns: Message object, including message id
 
     Load pre-authorized user credentials from the environment.
-    TODO(developer) - See https://developers.google.com/identity
-    for guides on implementing OAuth2 for the application.
     """
     creds = get_creds()
 

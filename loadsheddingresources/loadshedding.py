@@ -6,6 +6,16 @@ payload = ''
 headers = {"token" : "55015410-617D4AFD-8FFBA538-428E48F9"}
 
 def response_loadshedding(message,bot):
+    """
+    The response_loadshedding function is used to get the loadshedding schedule for a specific area.
+    The function takes in two parameters, message and bot. The message parameter is used to send the response back to 
+    the user who sent the request and bot is used as an instance of telebot which allows us to use its methods such as 
+    send_message()
+
+    :param message: Get the message sent by the user
+    :param bot: Send messages to the user
+    :return: The loadshedding times for the current day
+    """
 
     area_ids = {
         "Home": "ethekwini3-14a-glenwood",
@@ -47,6 +57,11 @@ def response_loadshedding(message,bot):
 
 
 def get_stage():
+    """
+    The get_stage function returns the current stage of loadshedding.
+
+    :return: The current stage of loadshedding
+    """
 
     URL = "http://loadshedding.eskom.co.za/LoadShedding/GetStatus"
     r = requests.get(URL)
@@ -55,6 +70,12 @@ def get_stage():
     return stage
 
 def get_area():
+    """
+    The get_area function is used to get the area of a business.
+        It takes no arguments and returns nothing.
+    
+    :return: A json file with the area information
+    """
     conn.request("GET",'https://developer.sepush.co.za/business/2.0/areas_search?text=umbilo',payload,headers)
     res = conn.getresponse()
     data = res.read()

@@ -3,6 +3,15 @@ from eventresources.calendar_resources import list_of_event,event_output
 
 
 def delete_events(message,bot):
+    """
+    The delete_events function takes in a message and bot object,
+        then deletes the event that is selected by the user.
+        
+    
+    :param message: Get the message that is sent by the user
+    :param bot: Send a message to the user
+    :return: A string
+    """
     events = list_of_event()
     
     num = int(message.text.split()[1])

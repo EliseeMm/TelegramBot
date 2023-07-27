@@ -3,6 +3,14 @@ from credsandservices.credsandservices import service
 
 
 def insert_allday_event(message):
+    """
+    The insert_allday_event function takes in a message object and returns a string.
+    The function parses the text of the message to extract information about an event, 
+    and then inserts that event into Google Calendar.
+    
+    :param message: Get the message sent by the user
+    :return: A string
+    """
     command = message.text.split()
     summary = command[1]
     startdate = command[2]
@@ -25,6 +33,15 @@ def insert_allday_event(message):
 
 
 def insert_timed_event(message):
+    """
+    The insert_timed_event function takes in a message object and returns a string.
+    The function splits the text of the message into 5 parts: command, summary, startdate, starttime and endtime.
+    It then checks if these values are valid by using datetime's date() and time() functions to check if they are valid dates/times. 
+    If they are not it will return an error response saying that invalid date/time was entered. If all is well it will create an event dictionary with the given values as keys for each value in their respective fields (summary,startdate etc). It then uses Google's API to insert this event
+    
+    :param message: Get the message sent by the user
+    :return: A string
+    """
     commands_list = message.text.split()
     command,summary,startdate,starttime,endtime = commands_list[0],commands_list[1],commands_list[2],commands_list[3],commands_list[4]
     response = ""

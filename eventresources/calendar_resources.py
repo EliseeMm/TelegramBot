@@ -4,6 +4,16 @@ from googleapiclient.errors import HttpError
 import json
 
 def event_output(events):
+    """
+    The event_output function takes a list of events and returns a string with the following format:
+        available events
+        1)     2020-01-01  00:00 - 23:59   event name
+        2)     2020-02-02  00:00 - 23:59   event name2
+    
+    :param events: Pass the events list to the function
+    :return: A string with a list of events
+
+    """
     eventsdict = {}
     eventnum = 1
     
@@ -34,9 +44,15 @@ def event_output(events):
     return response
     
 def calen(message,bot):
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
     """
+    The calen function returns a list of events on the user's calendar.
+        
+    
+    :param message: Pass the message from the user to the bot
+    :param bot: Access the bot object and send messages back to the user
+    :return: A list of events which are in the calendar
+    """
+    
 
     try:
         events = list_of_event()
@@ -48,6 +64,12 @@ def calen(message,bot):
     
 
 def list_of_event():
+    """
+    The list_of_event function will return a list of events on the user's calendar.
+        The function takes no arguments and returns a list of dictionaries, each dictionary representing an event.
+    
+    :return: A list of events
+    """
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                             maxResults=10, singleEvents=True,

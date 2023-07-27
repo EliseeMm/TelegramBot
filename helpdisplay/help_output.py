@@ -1,4 +1,10 @@
 def output_help():
+    """
+    The output_help function returns a string containing the help text for the bot.
+    It is called when a user sends /help to the bot.
+    
+    :return: A string with all of the accepted commands and their usage
+    """
     return ("/help : displays how to use accepted commands\n\n"
     "/calendar : view current and future events appearing on users calendar.\n\n"
     "/weather : get the next 7 days weather for Durban\n"
