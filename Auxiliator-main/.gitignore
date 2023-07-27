@@ -130,3 +130,5 @@ dmypy.json
 constants.py
 token.json
 events_list.json
+calendar_token.json
+email_token.json

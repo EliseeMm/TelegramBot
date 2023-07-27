@@ -8,9 +8,8 @@ headers = {"token" : "55015410-617D4AFD-8FFBA538-428E48F9"}
 def response_loadshedding(message,bot):
 
     area_ids = {
-        "Home": "ethekwini2-14-glenwood",
-        "Work" : "ethekwini2-23-umbilo",
-        "Lique" : "ethekwini2-13-umbiloeast",
+        "Home": "ethekwini3-14a-glenwood",
+        "Lique" : "ethekwini3-13a-umbiloeast",
     }
     current_stage = get_stage()
     for key,value in area_ids.items():
@@ -55,4 +54,14 @@ def get_stage():
     stage = data -1
     return stage
 
+def get_area():
+    conn.request("GET",'https://developer.sepush.co.za/business/2.0/areas_search?text=umbilo',payload,headers)
+    res = conn.getresponse()
+    data = res.read()
+
+    lis = data.decode("utf-8")
+    datas = json.loads(lis)
+    with open("area.json","w") as file:
+        json.dump(datas,file,indent=4)   
+    
 
